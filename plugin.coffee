@@ -14,7 +14,7 @@ module.exports = (wintersmith, callback) ->
       @_filename.relative.replace /sass|scss$/g, 'css'
 
     getView: ->
-      return (env, locals, contents, templates, callback) ->
+      return (env, locals, contents, templates, callback) =>
         if path.basename(@_filename.full).charAt(0) == '_'
           callback null
         else
@@ -32,8 +32,10 @@ module.exports = (wintersmith, callback) ->
             else
               callback null, new Buffer stdout
 
-          c = child_process.execFile 'sass', command, exec_opts, onComplete
-        
+          for file in command
+            c = child_process.exec "sass #{file}", exec_opts, onComplete
+          
+
   SassPlugin.fromFile = (filename, callback) ->
     fs.readFile filename.full, (error, buffer) ->
       if error
